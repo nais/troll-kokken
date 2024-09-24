@@ -1,0 +1,19 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: troll-kokken
+spec:
+  image: europe-north1-docker.pkg.dev/nais-io/nais/images/testapp:latest
+  ingresses: 
+  - "https://troll-kokken.ekstern.dev.nav.no"
+  replicas:
+    max: 1
+    min: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi 
+  accessPolicy:
+    outbound:
+      rules:
+        - application: "troll-gryta"
