@@ -38,6 +38,7 @@ func main() {
 	}
 
 	http.HandleFunc("/instances", func(wr http.ResponseWriter, _ *http.Request) {
+		wr.Header().Set("Access-Control-Allow-Origin", "*")
 		json.NewEncoder(wr).Encode(w.Instances())
 	})
 
