@@ -8,16 +8,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
 var (
 	grytaEndpoint string
 	bindAddr      string
+	fakeResponse  string
 )
 
 func init() {
 	flag.StringVar(&grytaEndpoint, "gryta-endpoint", envOrDefault("GRYTA_ENDPOINT", "troll-gryta"), "endpoint where troll-gryta is running")
+	flag.StringVar(&fakeResponse, "fake-response", os.Getenv("FAKE_RESPONSE"), "run in dev mode")
 	flag.StringVar(&bindAddr, "bind-address", ":8080", "ip:port where http requests are served")
 
 	flag.Parse()
@@ -25,7 +28,14 @@ func init() {
 
 func main() {
 	w := New(grytaEndpoint)
-	go w.Run()
+
+	if fakeResponse == "" {
+		go w.Run()
+	} else {
+		for _, v := range strings.Split(fakeResponse, ",") {
+			w.instances[v] = true
+		}
+	}
 
 	http.HandleFunc("/instances", func(wr http.ResponseWriter, _ *http.Request) {
 		json.NewEncoder(wr).Encode(w.Instances())
