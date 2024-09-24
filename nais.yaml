@@ -2,8 +2,9 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
   name: troll-kokken
+  namespace: n415-retreat
 spec:
-  image: europe-north1-docker.pkg.dev/nais-io/nais/images/testapp:latest
+  image: {{ image }}
   ingresses: 
   - "https://troll-kokken.ekstern.dev.nav.no"
   replicas:
